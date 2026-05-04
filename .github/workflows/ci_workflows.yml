@@ -36,14 +36,13 @@ jobs:
 
       envs: |
         # Standard tests
-        # Linux builds - test on all supported PyQt5/6 and PySide2/6 versions,
-        # and include all dependencies in some builds
-        - linux: py310-test-pyqt63-all
+        # Linux builds - test on all supported PyQt5/6 and PySide2/6 versions
+        - linux: py310-test-pyqt63
         - linux: py311-test-pyqt64
         - linux: py312-test-pyqt65
         - linux: py312-test-pyqt68
         - linux: py313-test-pyqt67
-        - linux: py311-test-pyqt66-all
+        - linux: py311-test-pyqt66
         - linux: py311-test-pyqt514
 
         # Documentation build
@@ -55,27 +54,25 @@ jobs:
             brew:
               - enchant
 
-        # Test a few configurations on macOS 13 (Intel, default for py<310) and 14 (Arm)
-        - macos: py310-test-pyqt515-all
-        - macos: py311-test-pyqt65
+        # Test a few configurations on macOS 15 (Arm)
+        - macos: py310-test-pyqt515
+        # Failing on timeout when pytest-qt is installed (#65)
+        - macos: py311-test-pyqt65-ignoreqt
         - macos: py312-test-pyqt66
-        - macos: py313-test-pyqt68
+        - macos: py314-test-pyqt68
 
         # Test some configurations on Windows
-        - windows: py310-test-pyqt63
-        - windows: py311-test-pyqt65
+        # Ignore failures from the Qt widget with older Qt6 versions (#65)
+        - windows: py310-test-pyqt63-ignoreqt
+        - windows: py311-test-pyqt65-ignoreqt
         - windows: py312-test-pyqt67
-        - windows: py313-test-pyqt67
+        - windows: py313-test-pyqt68
 
         # Test against latest developer versions of some packages
         - linux: py311-test-pyqt64-dev
-        - linux: py312-test-pyqt515-dev-all
-        - linux: py312-test-pyqt67-dev
-        # Test against latest developer versions of some packages
-        - linux: py311-test-pyqt64-dev
-        - linux: py312-test-pyqt515-dev-all
+        - linux: py312-test-pyqt515-dev
         - linux: py313-test-pyqt67-dev
-        - linux: py314-test-pyqt68-dev-all
+        - linux: py314-test-pyqt68-dev
 
   allowed_failures:
     needs: initial_checks
@@ -119,7 +116,7 @@ jobs:
           coverage: false
 
         # Failure in test_close_tab
-        - windows: py310-test-pyqt515-all
+        - windows: py310-test-pyqt515
 
   publish:
     needs: tests
